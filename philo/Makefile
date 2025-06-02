@@ -1,12 +1,15 @@
 CC = cc
-CFLAGS = -O3 -Wall -Wextra -Werror -g
-MLXFLAGS = -lmlx -lXext -lX11
-NAME = so_long
+CFLAGS = -O3 -Wall -Wextra -Werror -g -pthread
+NAME = philo
 
 LIBFT = libs/libft
 LIBX = libs/minilibx-linux
 
-include Sources.mk
+SRCS = src/main.c \
+			src/utils/colors.c \
+			src/utils/dev/printers.C \
+			src/parser/parser.c src/parser/utils.c \
+			src/philo/philo.c \
 
 GREEN = \033[32m
 RED = \033[31m
@@ -23,7 +26,7 @@ $(NAME): $(OBJS)
 		(echo "$(TERM_UP)$(RED)Error in libft compilation!$(DEF_COLOR)" && exit 1)
 	@$(MAKE) -C $(LIBX) -s all ||\
 		(echo "$(TERM_UP)$(RED)Error in MLX compilation!$(DEF_COLOR)" && exit 1)
-	@$(CC) $(CFLAGS) $(MLXFLAGS) $(OBJS) -L $(LIBFT) -lft -L $(LIBX) -lmlx -o $(NAME) || \
+	@$(CC) $(CFLAGS) $(OBJS) -L $(LIBFT) -lft -L $(LIBX) -lmlx -o $(NAME) || \
 		(echo "$(TERM_UP)$(RED)Error during linking!$(DEF_COLOR)" && exit 1)
 
 %.o: %.c
@@ -39,7 +42,7 @@ fclean: clean
 		(echo "$(TERM_UP)$(RED)Error in libft cleaning!$(DEF_COLOR)" && exit 1)
 	@rm -f $(NAME)
 	@echo "$(TERM_UP)$(GREEN)Full clean Successful!$(DEF_COLOR)"
-	
+
 re: fclean all
 
 .PHONY: all clean fclean re
